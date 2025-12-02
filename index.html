@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Food Shop</title> <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div class="logo">Fast Food Shop</div> <ul>
+            <li><a href="#home">Menu</a></li>
+            <li><a href="#products">Specials</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Today's Menu</h1> <div class="products" id="products"></div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div class="modal-icon" id="modalIcon"></div>
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <div class="modal-price" id="modalPrice"></div>
+            <p class="modal-description" id="modalDescription"></p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">Order & Policy</a>
+            </div>
+            <div class="copyright">
+                &copy; Assignment - Fast Food Edition
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- UPDATED PRODUCTS ARRAY FOR FAST FOOD ---
+        const products = [
+            {
+                id: 1,
+                name: "Classic Cheeseburger Meal",
+                price: "$8.99",
+                // NOTE: Replace this placeholder with a real image path like "images/cheeseburger.jpg"
+                image: "Cheeseburger.jpg", 
+                description: "Our signature beef patty, melted American cheese, fresh lettuce, tomato, and our secret sauce, served with crispy fries and a drink."
+            },
+            {
+                id: 2,
+                name: "Spicy Chicken Sandwich",
+                price: "$7.49",
+                // NOTE: Replace this placeholder with a real image path like "images/chicken-sandwich.jpg"
+                image: "Chicken-sandwich.jpg",
+                description: "Crispy fried chicken breast seasoned with fiery spices, topped with creamy slaw and pickles on a toasted bun."
+            },
+            {
+                id: 3,
+                name: "Large French Fries",
+                price: "$3.99",
+                // NOTE: Replace this placeholder with a real image path like "images/fries.jpg"
+                image: "Homemade-French-Fries_8.jpg",
+                description: "A large serving of golden, crispy, salted French fries. Perfect for sharing or for an extra treat."
+            },
+            {
+                id: 4,
+                name: "Chocolate Milkshake",
+                price: "$4.50",
+                // NOTE: Replace this placeholder with a real image path like "images/milkshake.jpg"
+                image: "Chocolate-milkshake-5.jpg",
+                description: "Thick, creamy chocolate milkshake topped with whipped cream. The perfect classic dessert."
+            }
+        ];
+        // --- END OF UPDATED PRODUCTS ARRAY ---
+
+        function renderProducts() {
+            const container = document.getElementById('products');
+            container.innerHTML = ''; // Clear existing content before rendering
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => openModal(product);
+                
+                card.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">${product.price}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function openModal(product) {
+            document.getElementById('modalIcon').innerHTML = `<img src="${product.image}" alt="${product.name}" class="modal-image">`;
+            document.getElementById('modalTitle').textContent = product.name;
+            document.getElementById('modalPrice').textContent = product.price;
+            document.getElementById('modalDescription').textContent = product.description;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+        window.onclick = function(e) {
+            const modal = document.getElementById('modal');
+            if (e.target === modal) {
+                closeModal();
+            }
+        }
+
+        renderProducts();
+    </script>
+</body>
+</html>
