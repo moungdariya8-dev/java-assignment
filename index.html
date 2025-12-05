@@ -3,84 +3,408 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fast Food Shop</title> <link rel="stylesheet" href="style.css">
+    <title>Fast Food Shop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        nav {
+            background: #333;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        nav .nav-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffc107;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ffc107;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 25px;
+            max-width: 650px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: zoomIn 0.4s;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.4);
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.2rem;
+            font-size: 2.5rem;
+            cursor: pointer;
+            color: #fff;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 107, 53, 0.9);
+            transition: all 0.3s;
+            z-index: 10;
+            font-weight: bold;
+        }
+
+        .close-btn:hover {
+            background: #ff6b35;
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .modal-body {
+            padding: 2.5rem;
+        }
+
+        .modal-title {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            color: #333;
+            font-weight: 800;
+        }
+
+        .modal-price {
+            font-size: 2rem;
+            color: #ff6b35;
+            font-weight: 900;
+            margin-bottom: 1.8rem;
+        }
+
+        .modal-description {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        .order-btn {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .order-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 107, 53, 0.4);
+        }
+
+        footer {
+            background: #fff;
+            padding: 2.5rem;
+            margin-top: 4rem;
+            text-align: center;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            margin-bottom: 1.2rem;
+        }
+
+        .footer-links a {
+            color: #ff6b35;
+            text-decoration: none;
+            margin: 0 1.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .copyright {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1rem;
+            }
+
+            nav a {
+                font-size: 0.9rem;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .products {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <nav>
-        <div class="logo">Fast Food Shop</div> <ul>
-            <li><a href="#home">Menu</a></li>
-            <li><a href="#products">Specials</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
+        <div class="nav-wrapper">
+            <div class="logo">Fast Food</div>
+            <ul>
+                <li><a href="#home">Menu</a></li>
+                <li><a href="#products">Specials</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
     </nav>
 
     <div class="container">
-        <h1>Today's Menu</h1> <div class="products" id="products"></div>
+        <h1>Today's Menu</h1>
+        <p class="subtitle">Hot & Fresh - Made to Order</p>
+        <div class="products" id="products"></div>
     </div>
 
     <div class="modal" id="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <div class="modal-icon" id="modalIcon"></div>
-            <h2 class="modal-title" id="modalTitle"></h2>
-            <div class="modal-price" id="modalPrice"></div>
-            <p class="modal-description" id="modalDescription"></p>
+            <div id="modalIcon"></div>
+            <div class="modal-body">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <div class="modal-price" id="modalPrice"></div>
+                <p class="modal-description" id="modalDescription"></p>
+                <button class="order-btn" onclick="orderNow()">🛒 Order Now</button>
+            </div>
         </div>
     </div>
 
     <footer>
         <div class="footer-content">
             <div class="footer-links">
-                <a href="#">Order & Policy</a>
+                <a href="#order">Order Policy</a>
+                <a href="#delivery">Delivery Info</a>
+                <a href="#hours">Hours</a>
             </div>
             <div class="copyright">
-                &copy; Assignment - Fast Food Edition
+                &copy; 2024 Fast Food Shop - All Rights Reserved
             </div>
         </div>
     </footer>
 
     <script>
-        // --- UPDATED PRODUCTS ARRAY FOR FAST FOOD ---
         const products = [
             {
                 id: 1,
                 name: "Classic Cheeseburger Meal",
                 price: "$8.99",
-                // NOTE: Replace this placeholder with a real image path like "images/cheeseburger.jpg"
-                image: "Cheeseburger.jpg", 
+                image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80",
                 description: "Our signature beef patty, melted American cheese, fresh lettuce, tomato, and our secret sauce, served with crispy fries and a drink."
             },
             {
                 id: 2,
                 name: "Spicy Chicken Sandwich",
                 price: "$7.49",
-                // NOTE: Replace this placeholder with a real image path like "images/chicken-sandwich.jpg"
-                image: "Chicken-sandwich.jpg",
+                image: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=600&q=80",
                 description: "Crispy fried chicken breast seasoned with fiery spices, topped with creamy slaw and pickles on a toasted bun."
             },
             {
                 id: 3,
                 name: "Large French Fries",
                 price: "$3.99",
-                // NOTE: Replace this placeholder with a real image path like "images/fries.jpg"
-                image: "Homemade-French-Fries_8.jpg",
+                image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=600&q=80",
                 description: "A large serving of golden, crispy, salted French fries. Perfect for sharing or for an extra treat."
             },
             {
                 id: 4,
                 name: "Chocolate Milkshake",
                 price: "$4.50",
-                // NOTE: Replace this placeholder with a real image path like "images/milkshake.jpg"
-                image: "AR-48974-vanilla-milkshake-hero-4x3-c815295c714f41f6b17b104e7403a53b.jpg",
+                image: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=600&q=80",
                 description: "Thick, creamy chocolate milkshake topped with whipped cream. The perfect classic dessert."
+            },
+            {
+                id: 5,
+                name: "BBQ Bacon Burger",
+                price: "$10.99",
+                image: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=600&q=80",
+                description: "Double beef patty loaded with crispy bacon, cheddar cheese, onion rings, and tangy BBQ sauce. A flavor explosion!"
+            },
+            {
+                id: 6,
+                name: "Set Box",
+                price: "$16.99",
+                image: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=600&q=80",
+                description: "A complete meal box including a burger, fries, drink, and a dessert of your choice. Perfect for a satisfying meal on the go."
+            },
+            {
+                id: 7,
+                name: "Loaded Nachos",
+                price: "$7.99",
+                image: "https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?w=600&q=80",
+                description: "Crispy tortilla chips loaded with melted cheese, jalapeños, sour cream, guacamole, and salsa."
+            },
+            {
+                id: 8,
+                name: "Pizza Supreme",
+                price: "$5.49",
+                image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80",
+                description: "A delicious pizza topped with pepperoni, sausage, mushrooms, onions, green peppers, and black olives."
+            },
+            {
+                id: 9,
+                name: "Curry",
+                price: "$5.49",
+                image: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&q=80",
+                description: "A flavorful curry dish made with a blend of spices, vegetables, and your choice of protein, served with steamed rice."
             }
         ];
-        // --- END OF UPDATED PRODUCTS ARRAY ---
+
+        let currentProduct = null;
 
         function renderProducts() {
             const container = document.getElementById('products');
-            container.innerHTML = ''; // Clear existing content before rendering
+            container.innerHTML = '';
             products.forEach(product => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
@@ -88,24 +412,37 @@
                 
                 card.innerHTML = `
                     <img src="${product.image}" alt="${product.name}" class="product-image">
-                    <div class="product-name">${product.name}</div>
-                    <div class="product-price">${product.price}</div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">${product.price}</div>
+                    </div>
                 `;
                 container.appendChild(card);
             });
         }
 
         function openModal(product) {
+            currentProduct = product;
             document.getElementById('modalIcon').innerHTML = `<img src="${product.image}" alt="${product.name}" class="modal-image">`;
             document.getElementById('modalTitle').textContent = product.name;
             document.getElementById('modalPrice').textContent = product.price;
             document.getElementById('modalDescription').textContent = product.description;
             document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
             document.getElementById('modal').classList.remove('active');
+            document.body.style.overflow = 'auto';
         }
+
+        function orderNow() {
+            if (currentProduct) {
+                alert(`🎉 Order placed for ${currentProduct.name}!\n\nYour order will be ready in 15-20 minutes. Thank you!`);
+                closeModal();
+            }
+        }
+
         window.onclick = function(e) {
             const modal = document.getElementById('modal');
             if (e.target === modal) {
